@@ -1,0 +1,36 @@
+# Environments
+.env
+.env.*
+backend/.env
+frontend/.env
+frontend/.env.local
+!.env.example
+
+# Node
+node_modules/
+npm-debug.log
+yarn-error.log
+dist/
+build/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.pkl
+venv/
+env/
+.Python
+.venv/
+
+# SQLite
+*.db
+*.sqlite3
+
+# Uploads / Static
+backend/static/avatars/
+frontend/public/avatars/
+
+# OS Files
+.DS_Store
+Thumbs.db
