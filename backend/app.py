@@ -3,6 +3,7 @@ import numpy as np
 import json
 import smtplib
 import threading
+import requests
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from datetime import datetime
@@ -30,8 +31,27 @@ print("Starting model load...")
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 model_path = os.path.join(BASE_DIR, "model.pkl")
 
-with open(model_path, "rb") as f:
-    bundle = load(f)
+MODEL_URL = "https://huggingface.co/Atharvcode/vitality-ml-model/resolve/main/model.pkl?download=true"
+
+def load_ml_model():
+    # If the file doesn't exist (like on Render), download it first
+    if not os.path.exists(model_path):
+        print("Downloading 165MB ML model from Hugging Face. Please wait...")
+        response = requests.get(MODEL_URL, stream=True)
+        response.raise_for_status() # Check for errors
+        
+        with open(model_path, 'wb') as f:
+            for chunk in response.iter_content(chunk_size=8192):
+                f.write(chunk)
+        print("Model downloaded successfully!")
+
+    # Now load the model into memory
+    print("Unpickling model...")
+    with open(model_path, "rb") as f:
+        return load(f)
+
+# Execute the function to load the model
+bundle = load_ml_model()
 
 print("Model loaded successfully")
 

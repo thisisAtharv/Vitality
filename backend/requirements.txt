@@ -7,3 +7,4 @@ dnspython
 python-dotenv
 gunicorn
 groq
+requests
