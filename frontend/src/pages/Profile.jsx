@@ -94,9 +94,14 @@ const Profile = () => {
             });
             const data = await res.json();
             if (data.photo_url) {
-                // Update Firebase Auth photoURL
-                await updateProfile(auth.currentUser, { photoURL: data.photo_url });
-                setAvatarUrl(data.photo_url);
+                // Determine display URL
+                let displayUrl = data.photo_url;
+                if (!displayUrl.startsWith('http')) {
+                    displayUrl = `${API}${displayUrl}`;
+                }
+                // Update Firebase Auth photoURL (Firebase allows any string, but absolute is safer for external usages)
+                await updateProfile(auth.currentUser, { photoURL: displayUrl });
+                setAvatarUrl(displayUrl);
             }
         } catch (err) {
             console.error("Photo upload error:", err);

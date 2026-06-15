@@ -97,6 +97,11 @@ except Exception as e:
 def send_health_email(to_email, health_score, key_risk_factor, diet_tags, exercise_tags):
     smtp_email = os.getenv("SMTP_EMAIL")
     smtp_password = os.getenv("SMTP_PASSWORD")
+    if smtp_email:
+        smtp_email = smtp_email.replace('"', '').replace("'", "").strip()
+    if smtp_password:
+        smtp_password = smtp_password.replace(" ", "").replace('"', '').replace("'", "")
+        
     if not smtp_email or not smtp_password or not to_email:
         return
 
@@ -551,7 +556,7 @@ def upload_photo():
         filename = f"{uid}_{uuid.uuid4().hex[:8]}.{ext}"
         save_path = os.path.join("static", "avatars", filename)
         photo.save(save_path)
-        photo_url = f"{request.host_url}static/avatars/{filename}"
+        photo_url = f"/static/avatars/{filename}"
         return jsonify({"status": "ok", "photo_url": photo_url})
     except Exception as e:
         return jsonify({"error": str(e)}), 500

@@ -11,6 +11,19 @@ import { auth, googleProvider } from "@/firebase";
 
 const AuthContext = createContext(null);
 
+const API = import.meta.env.VITE_API_URL || "http://localhost:5000";
+
+const fixPhotoUrl = (url) => {
+    if (!url) return url;
+    if (url.includes("localhost:5000") && API !== "http://localhost:5000") {
+        return url.replace("http://localhost:5000", API);
+    }
+    if (url.startsWith("/static/avatars")) {
+        return `${API}${url}`;
+    }
+    return url;
+};
+
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -22,7 +35,7 @@ export const AuthProvider = ({ children }) => {
                     uid: firebaseUser.uid,
                     name: firebaseUser.displayName || firebaseUser.email?.split("@")[0] || "User",
                     email: firebaseUser.email,
-                    photoURL: firebaseUser.photoURL,
+                    photoURL: fixPhotoUrl(firebaseUser.photoURL),
                 });
             } else {
                 setUser(null);
@@ -40,7 +53,7 @@ export const AuthProvider = ({ children }) => {
             uid: cred.user.uid,
             name: name,
             email: cred.user.email,
-            photoURL: cred.user.photoURL,
+            photoURL: fixPhotoUrl(cred.user.photoURL),
         });
     };
 
