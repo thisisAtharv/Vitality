@@ -80,7 +80,7 @@ const InputWizard = ({ onSubmit }) => {
             const formDataPayload = new FormData();
             formDataPayload.append('data', pdfFile);
 
-            const response = await fetch('http://localhost:5678/webhook-test/extract-blood-report', {
+            const response = await fetch('https://n8n.atharvgangawane.me/webhook/extract-blood-report', {
                 method: 'POST',
                 body: formDataPayload,
             });
